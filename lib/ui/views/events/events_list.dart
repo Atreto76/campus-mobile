@@ -3,9 +3,7 @@ import 'package:campus_mobile_experimental/core/data_providers/events_data_provi
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
@@ -73,7 +71,7 @@ class EventsList extends StatelessWidget {
       title: Padding(
         padding: const EdgeInsets.symmetric(vertical: 3.0),
         child: Text(
-          data.title,
+          data.title.t,
           textAlign: TextAlign.start,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
@@ -93,28 +91,32 @@ class EventsList extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  data.description,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
+                data.description.t != null
+                    ? Text(
+                        (data.description.t),
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      )
+                    : Container(),
                 SizedBox(height: 5),
                 Row(
                   children: <Widget>[
-                    Text(DateFormat.MMMMd().format(data.eventDate.toLocal()) +
-                        ', '),
-                    TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)
+//                    Text(DateFormat.MMMMd().format(data.startdate.text.toLocal()) +
+//                        ', '),
+                    //Text(data.startdate.text + data.enddate.text)
                   ],
                 ),
               ],
             ),
           ),
           SizedBox(width: 4),
-          ImageLoader(
-            url: data.imageThumb,
-            fullSize: true,
-          ),
+          data.mediaContent != null
+              ? ImageLoader(
+                  url: data.mediaContent.url,
+                  fullSize: true,
+                )
+              : Container(),
         ],
       ),
     );

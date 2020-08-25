@@ -1,10 +1,10 @@
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:xml2json/xml2json.dart';
 
 class EventsService {
   // TODO: Fix me
-  final String endpoint =
-      'https://2wxnokqsz2.execute-api.us-west-2.amazonaws.com/dev/events/v2';
+  final String endpoint = 'https://tockify.com/api/feeds/rss/ucenevents';
 
   bool _isLoading = false;
   DateTime _lastUpdated;
@@ -25,12 +25,16 @@ class EventsService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      final data = eventsModelFromJson(_response);
+      final transformer = Xml2Json();
+      transformer.parse(_response);
+      String _jsonResponse = transformer.toGData();
+      final data = eventsRssFromJson(_jsonResponse).rss.channel.item;
       _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
       _error = e.toString();
+      print(_error);
       _isLoading = false;
       return false;
     }
